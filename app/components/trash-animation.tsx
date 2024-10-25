@@ -183,6 +183,7 @@ export function TrashAnimation() {
             {imagesToRemove.map((image, index) => (
               <li key={image} className="flex h-1 items-center gap-2">
                 <motion.img
+                  layoutId={`image-${image}`}
                   alt="A guy"
                   className="rounded"
                   src={`https://animations-on-the-web-git-how-i-use-3066e1-emilkowalski-s-team.vercel.app/how-i-use-framer-motion/why-framer-motion/${image}.webp`}
