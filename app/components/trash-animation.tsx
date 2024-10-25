@@ -175,9 +175,14 @@ export function TrashAnimation() {
       ) : null}
       {readyToRemove ? (
         <div className="absolute top-1/2 z-10 h-[114px] w-24 -translate-y-1/2">
-          <div>
+          <motion.div
+            initial={{ opacity: 0, filter: "blur(4px)", scale: 1.2 }}
+            animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
+            exit={{ opacity: 0, filter: "blur(4px)", scale: 1.2 }}
+            transition={{ duration: 0.2, bounce: 0, type: "spring" }}
+          >
             <TrashBack />
-          </div>
+          </motion.div>
 
           <div className="absolute top-[-20px] flex w-full flex-col-reverse items-center">
             {imagesToRemove.map((image, index) => (
