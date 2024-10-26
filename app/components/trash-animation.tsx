@@ -11,6 +11,7 @@ export function TrashAnimation() {
   const [imagesToRemove, setImagesToRemove] = useState<string[]>([]);
   const [readyToRemove, setReadyToRemove] = useState<boolean>(false);
   const [removed, setRemoved] = useState(false);
+  const [hide, setHide] = useState(false);
 
   const imagesToShow = readyToRemove
     ? IMAGES.filter((img) => !imagesToRemove.includes(img))
@@ -19,16 +20,28 @@ export function TrashAnimation() {
   useEffect(() => {
     if (removed) {
       setTimeout(() => {
+        setHide(true);
+      }, 1000);
+
+      setTimeout(() => {
         setImagesToRemove([]);
         setReadyToRemove(false);
         setRemoved(false);
       }, 1200);
+
+      setTimeout(() => {
+        setHide(false);
+      }, 1700);
     }
   }, [removed]);
 
   return (
     <MotionConfig transition={{ type: "spring", duration: 0.5, bounce: 0.2 }}>
-      <div className="relative flex h-[500px] flex-col items-center justify-center">
+      <motion.div
+        initial={false}
+        animate={{ opacity: hide ? 0 : 1 }}
+        className="relative flex h-[500px] flex-col items-center justify-center"
+      >
         <ul className="grid grid-cols-2 gap-4">
           <AnimatePresence>
             {!readyToRemove &&
@@ -36,32 +49,60 @@ export function TrashAnimation() {
                 const isSelected = imagesToRemove.includes(image);
 
                 return (
-                  <li key={image} className="relative flex h-[100px] w-[100px]">
-                    <div
+                  <motion.li
+                    exit={
+                      isSelected
+                        ? {}
+                        : {
+                            opacity: 0,
+                            filter: "blur(4px)",
+                            transition: { duration: 0.17 },
+                          }
+                    }
+                    key={image}
+                    className="relative flex h-[100px] w-[100px]"
+                  >
+                    <motion.div
+                      exit={{ opacity: 0, transition: { duration: 0 } }}
                       className={clsx(
                         "pointer-events-none absolute right-2 top-2 flex h-4 w-4 items-center justify-center rounded-full border border-white/60"
                       )}
                     >
-                      {isSelected ? (
-                        <div>
-                          <div className="absolute inset-0.5 rounded-full bg-white" />
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="relative h-5 w-5 flex-shrink-0 rounded-full text-black"
-                            viewBox="0 0 24 24"
-                            fill="none"
+                      <AnimatePresence>
+                        {isSelected ? (
+                          <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1.1, opacity: 1 }}
+                            exit={{
+                              scale: 0.9,
+                              opacity: 0,
+                              transition: { duration: 0.1 },
+                            }}
+                            transition={{
+                              type: "spring",
+                              duration: 0.25,
+                              bounce: 0,
+                            }}
                           >
-                            <path
-                              className="bg-white"
-                              fillRule="evenodd"
-                              clipRule="evenodd"
-                              d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM15.5805 9.97493C15.8428 9.65434 15.7955 9.18183 15.4749 8.91953C15.1543 8.65724 14.6818 8.70449 14.4195 9.02507L10.4443 13.8837L9.03033 12.4697C8.73744 12.1768 8.26256 12.1768 7.96967 12.4697C7.67678 12.7626 7.67678 13.2374 7.96967 13.5303L9.96967 15.5303C10.1195 15.6802 10.3257 15.7596 10.5374 15.7491C10.749 15.7385 10.9463 15.6389 11.0805 15.4749L15.5805 9.97493Z"
-                              fill="currentColor"
-                            />
-                          </svg>
-                        </div>
-                      ) : null}
-                    </div>
+                            <div className="absolute inset-0.5 rounded-full bg-white" />
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="relative h-5 w-5 flex-shrink-0 rounded-full text-black"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                            >
+                              <path
+                                className="bg-white"
+                                fillRule="evenodd"
+                                clipRule="evenodd"
+                                d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM15.5805 9.97493C15.8428 9.65434 15.7955 9.18183 15.4749 8.91953C15.1543 8.65724 14.6818 8.70449 14.4195 9.02507L10.4443 13.8837L9.03033 12.4697C8.73744 12.1768 8.26256 12.1768 7.96967 12.4697C7.67678 12.7626 7.67678 13.2374 7.96967 13.5303L9.96967 15.5303C10.1195 15.6802 10.3257 15.7596 10.5374 15.7491C10.749 15.7385 10.9463 15.6389 11.0805 15.4749L15.5805 9.97493Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </motion.div>
+                        ) : null}
+                      </AnimatePresence>
+                    </motion.div>
                     <button
                       aria-label="Remove book"
                       onClick={() => {
@@ -83,7 +124,7 @@ export function TrashAnimation() {
                         width={100}
                       />
                     </button>
-                  </li>
+                  </motion.li>
                 );
               })}
           </AnimatePresence>
@@ -92,10 +133,10 @@ export function TrashAnimation() {
         <AnimatePresence>
           {imagesToRemove.length > 0 && !readyToRemove ? (
             <motion.div
-              initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, y: 20, filter: "blur(4px)" }}
-              transition={{ duration: 0.3, bounce: 0, type: "spring" }}
+              initial={{ y: 20, filter: "blur(4px)", opacity: 0 }}
+              animate={{ y: 0, filter: "blur(0px)", opacity: 1 }}
+              exit={{ y: 20, filter: "blur(4px)", opacity: 0 }}
+              transition={{ type: "spring", bounce: 0, duration: 0.3 }}
               className="absolute bottom-8 flex gap-1 rounded-xl p-1 shadow-[0_0_0_1px_rgba(0,0,0,0.08),0px_8px_8px_-8px_rgba(0,0,0,0.16)] will-change-transform"
             >
               <div className="flex w-full justify-between gap-1">
@@ -161,7 +202,12 @@ export function TrashAnimation() {
           ) : null}
         </AnimatePresence>
         {readyToRemove ? (
-          <div className="absolute bottom-10 flex flex-col gap-2">
+          <motion.div
+            initial={{ scale: 1.2, opacity: 0, filter: "blur(4px)" }}
+            animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }}
+            transition={{ duration: 0.3, bounce: 0, type: "spring" }}
+            className="absolute bottom-10 flex flex-col gap-2"
+          >
             <button
               onClick={() => {
                 if (readyToRemove) {
@@ -174,7 +220,7 @@ export function TrashAnimation() {
             >
               Trash {imagesToRemove.length} Collectibles
             </button>
-          </div>
+          </motion.div>
         ) : null}
         <AnimatePresence>
           {readyToRemove ? (
@@ -187,7 +233,19 @@ export function TrashAnimation() {
                 <TrashBack />
               </motion.div>
 
-              <div className="absolute top-[-20px] flex w-full flex-col-reverse items-center">
+              <motion.div
+                animate={{
+                  y: removed ? 110 : 73,
+                  scale: removed ? 0.7 : 1,
+                  filter: removed ? "blur(4px)" : "blur(0px)",
+                }}
+                transition={
+                  removed
+                    ? { duration: 0.3, type: "spring", bounce: 0 }
+                    : { delay: 0.13 }
+                }
+                className="absolute flex w-full top-[-60px] flex-col-reverse items-center"
+              >
                 {imagesToRemove.map((image, index) => (
                   <li key={image} className="flex h-1 items-center gap-2">
                     <motion.img
@@ -206,7 +264,7 @@ export function TrashAnimation() {
                     />
                   </li>
                 ))}
-              </div>
+              </motion.div>
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -219,7 +277,7 @@ export function TrashAnimation() {
             </div>
           ) : null}
         </AnimatePresence>
-      </div>
+      </motion.div>
     </MotionConfig>
   );
 }
