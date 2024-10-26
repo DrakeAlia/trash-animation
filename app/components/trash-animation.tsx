@@ -172,37 +172,43 @@ export function TrashAnimation() {
           </button>
         </div>
       ) : null}
-      {readyToRemove ? (
-        <div className="absolute top-1/2 z-10 h-[114px] w-24 -translate-y-1/2">
-          <div>
-            <TrashBack />
-          </div>
+      <AnimatePresence>
+        {readyToRemove ? (
+          <div className="absolute top-1/2 z-10 h-[114px] w-24 -translate-y-1/2">
+            <motion.div
+              initial={{ scale: 1.2, filter: "blur(4px)", opacity: 0 }}
+              animate={{ scale: 1, filter: "blur(0px)", opacity: 1 }}
+              exit={{ scale: 1.2, filter: "blur(4px)", opacity: 0 }}
+            >
+              <TrashBack />
+            </motion.div>
 
-          <div className="absolute top-[-20px] flex w-full flex-col-reverse items-center">
-            {imagesToRemove.map((image, index) => (
-              <li key={image} className="flex h-1 items-center gap-2">
-                <motion.img
-                  layoutId={`image-${image}`}
-                  alt="A guy"
-                  className="rounded"
-                  src={`https://animations-on-the-web-git-how-i-use-3066e1-emilkowalski-s-team.vercel.app/how-i-use-framer-motion/why-framer-motion/${image}.webp`}
-                  height={65}
-                  width={65}
-                  style={{
-                    rotate:
-                      index % 2 === 0
-                        ? 4 * (imagesToRemove.length - index + 1)
-                        : -1 * (imagesToRemove.length - index + 1) * 4,
-                  }}
-                />
-              </li>
-            ))}
+            <div className="absolute top-[-20px] flex w-full flex-col-reverse items-center">
+              {imagesToRemove.map((image, index) => (
+                <li key={image} className="flex h-1 items-center gap-2">
+                  <motion.img
+                    layoutId={`image-${image}`}
+                    alt="A guy"
+                    className="rounded"
+                    src={`https://animations-on-the-web-git-how-i-use-3066e1-emilkowalski-s-team.vercel.app/how-i-use-framer-motion/why-framer-motion/${image}.webp`}
+                    height={65}
+                    width={65}
+                    style={{
+                      rotate:
+                        index % 2 === 0
+                          ? 4 * (imagesToRemove.length - index + 1)
+                          : -1 * (imagesToRemove.length - index + 1) * 4,
+                    }}
+                  />
+                </li>
+              ))}
+            </div>
+            <div className="absolute bottom-[0] left-[3px] h-full w-[90px]">
+              <TrashFront />
+            </div>
           </div>
-          <div className="absolute bottom-[0] left-[3px] h-full w-[90px]">
-            <TrashFront />
-          </div>
-        </div>
-      ) : null}
+        ) : null}
+      </AnimatePresence>
     </div>
   );
 }
