@@ -72,7 +72,8 @@ export function TrashAnimation() {
                     }
                   }}
                 >
-                  <img
+                  <motion.img
+                    layoutId={`image-${image}`}
                     className="rounded-xl"
                     alt="A guy"
                     src={`https://animations-on-the-web-git-how-i-use-3066e1-emilkowalski-s-team.vercel.app/how-i-use-framer-motion/why-framer-motion/${image}.webp`}
@@ -84,7 +85,6 @@ export function TrashAnimation() {
             );
           })}
       </ul>
-
       <AnimatePresence>
         {imagesToRemove.length > 0 && !readyToRemove ? (
           <motion.div
@@ -156,7 +156,6 @@ export function TrashAnimation() {
           </motion.div>
         ) : null}
       </AnimatePresence>
-
       {readyToRemove ? (
         <div className="absolute bottom-10 flex flex-col gap-2">
           <button
@@ -175,14 +174,9 @@ export function TrashAnimation() {
       ) : null}
       {readyToRemove ? (
         <div className="absolute top-1/2 z-10 h-[114px] w-24 -translate-y-1/2">
-          <motion.div
-            initial={{ opacity: 0, filter: "blur(4px)", scale: 1.2 }}
-            animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
-            exit={{ opacity: 0, filter: "blur(4px)", scale: 1.2 }}
-            transition={{ duration: 0.2, bounce: 0, type: "spring" }}
-          >
+          <div>
             <TrashBack />
-          </motion.div>
+          </div>
 
           <div className="absolute top-[-20px] flex w-full flex-col-reverse items-center">
             {imagesToRemove.map((image, index) => (
