@@ -29,62 +29,65 @@ export function TrashAnimation() {
   return (
     <div className="relative flex h-[500px] flex-col items-center justify-center">
       <ul className="grid grid-cols-2 gap-4">
-        {!readyToRemove &&
-          imagesToShow.map((image) => {
-            const isSelected = imagesToRemove.includes(image);
+        <AnimatePresence>
+          {!readyToRemove &&
+            imagesToShow.map((image) => {
+              const isSelected = imagesToRemove.includes(image);
 
-            return (
-              <li key={image} className="relative flex h-[100px] w-[100px]">
-                <div
-                  className={clsx(
-                    "pointer-events-none absolute right-2 top-2 flex h-4 w-4 items-center justify-center rounded-full border border-white/60"
-                  )}
-                >
-                  {isSelected ? (
-                    <div>
-                      <div className="absolute inset-0.5 rounded-full bg-white" />
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="relative h-5 w-5 flex-shrink-0 rounded-full text-black"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                      >
-                        <path
-                          className="bg-white"
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                          d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM15.5805 9.97493C15.8428 9.65434 15.7955 9.18183 15.4749 8.91953C15.1543 8.65724 14.6818 8.70449 14.4195 9.02507L10.4443 13.8837L9.03033 12.4697C8.73744 12.1768 8.26256 12.1768 7.96967 12.4697C7.67678 12.7626 7.67678 13.2374 7.96967 13.5303L9.96967 15.5303C10.1195 15.6802 10.3257 15.7596 10.5374 15.7491C10.749 15.7385 10.9463 15.6389 11.0805 15.4749L15.5805 9.97493Z"
-                          fill="currentColor"
-                        />
-                      </svg>
-                    </div>
-                  ) : null}
-                </div>
-                <button
-                  aria-label="Remove book"
-                  onClick={() => {
-                    if (isSelected) {
-                      setImagesToRemove((images) =>
-                        images.filter((img) => img !== image)
-                      );
-                    } else {
-                      setImagesToRemove((images) => [...images, image]);
-                    }
-                  }}
-                >
-                  <motion.img
-                    layoutId={`image-${image}`}
-                    className="rounded-xl"
-                    alt="A guy"
-                    src={`https://animations-on-the-web-git-how-i-use-3066e1-emilkowalski-s-team.vercel.app/how-i-use-framer-motion/why-framer-motion/${image}.webp`}
-                    height={100}
-                    width={100}
-                  />
-                </button>
-              </li>
-            );
-          })}
+              return (
+                <li key={image} className="relative flex h-[100px] w-[100px]">
+                  <div
+                    className={clsx(
+                      "pointer-events-none absolute right-2 top-2 flex h-4 w-4 items-center justify-center rounded-full border border-white/60"
+                    )}
+                  >
+                    {isSelected ? (
+                      <div>
+                        <div className="absolute inset-0.5 rounded-full bg-white" />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="relative h-5 w-5 flex-shrink-0 rounded-full text-black"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
+                          <path
+                            className="bg-white"
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM15.5805 9.97493C15.8428 9.65434 15.7955 9.18183 15.4749 8.91953C15.1543 8.65724 14.6818 8.70449 14.4195 9.02507L10.4443 13.8837L9.03033 12.4697C8.73744 12.1768 8.26256 12.1768 7.96967 12.4697C7.67678 12.7626 7.67678 13.2374 7.96967 13.5303L9.96967 15.5303C10.1195 15.6802 10.3257 15.7596 10.5374 15.7491C10.749 15.7385 10.9463 15.6389 11.0805 15.4749L15.5805 9.97493Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </div>
+                    ) : null}
+                  </div>
+                  <button
+                    aria-label="Remove book"
+                    onClick={() => {
+                      if (isSelected) {
+                        setImagesToRemove((images) =>
+                          images.filter((img) => img !== image)
+                        );
+                      } else {
+                        setImagesToRemove((images) => [...images, image]);
+                      }
+                    }}
+                  >
+                    <motion.img
+                      layoutId={`image-${image}`}
+                      className="rounded-xl"
+                      alt="A guy"
+                      src={`https://animations-on-the-web-git-how-i-use-3066e1-emilkowalski-s-team.vercel.app/how-i-use-framer-motion/why-framer-motion/${image}.webp`}
+                      height={100}
+                      width={100}
+                    />
+                  </button>
+                </li>
+              );
+            })}
+        </AnimatePresence>
       </ul>
+
       <AnimatePresence>
         {imagesToRemove.length > 0 && !readyToRemove ? (
           <motion.div
@@ -203,9 +206,15 @@ export function TrashAnimation() {
                 </li>
               ))}
             </div>
-            <div className="absolute bottom-[0] left-[3px] h-full w-[90px]">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ delay: 0.175, duration: 0 }}
+              className="absolute bottom-[0] left-[3px] h-full w-[90px]"
+            >
               <TrashFront />
-            </div>
+            </motion.div>
           </div>
         ) : null}
       </AnimatePresence>
